@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class ConflictException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('Conflict.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_CONFLICT, $status);
+    }
+}

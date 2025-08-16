@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Traits;
+
+trait ApiOkResponses
+{
+    /**
+     * Check if the authenticated user has the required ability for the target model.
+     *
+     * @param  string  $ability  The ability to check (e.g., 'view', 'create', 'delete').
+     * @param  mixed  $targetModel  The target model or resource for the ability check.
+     * @param  string|null  $errorMessage  Optional error message for unauthorized access.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function isAbleTo($ability, $targetModel, $errorMessage = null)
+    {
+        if (! request()->user() || request()->user()->cannot($ability, $targetModel)) {
+            return $this->apiUnauthorized($errorMessage);
+        }
+
+        return $this->apiOk('Authorized');
+    }
+
+    /**
+     * Return a generic success response.
+     *
+     * @param  string  $message  The success message.
+     * @param  array  $data  The response data.
+     * @param  int  $statusCode  The HTTP status code (default: 200).
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiSuccess($message, $data = [], $statusCode = Response::HTTP_OK)
+    {
+        $response = [
+            'status' => 'success',
+            'message' => $message,
+            'data' => $data,
+        ];
+
+        if ($message === null) {
+            unset($response['message']);
+        }
+
+        return response()->json($response, $statusCode);
+    }
+
+    /**
+     * Return a generic success response.
+     *
+     * @param  array  $data  The response data.
+     * @param  int  $statusCode  The HTTP status code (default: 200).
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiContent($data = [], $statusCode = Response::HTTP_OK)
+    {
+        $response = [
+            'data' => $data,
+        ];
+
+        return response()->json($response, $statusCode);
+    }
+
+    /**
+     * Return a successful JSON response with HTTP 200 (OK).
+     *
+     * @param  string  $message  The success message.
+     * @param  array  $data  The response data.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiOk($message, $data = [])
+    {
+        return $this->apiSuccess($message, $data, Response::HTTP_OK);
+    }
+
+    /**
+     * Return a successful JSON response with HTTP 202 (ACCEPTED).
+     *
+     * @param  string  $message  The success message.
+     * @param  array  $data  The response data.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiAccepted($message, $data = [])
+    {
+        return $this->apiSuccess($message, $data, Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * Return a successful JSON response with HTTP 204 (No Content).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiNoContent()
+    {
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Return a successful JSON response with HTTP 201 (Created).
+     *
+     * @param  string  $message  The success message.
+     * @param  array  $data  The response data.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function apiCreated($message, $data = [])
+    {
+        return $this->apiSuccess($message, $data, Response::HTTP_CREATED);
+    }
+}

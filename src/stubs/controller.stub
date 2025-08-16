@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Http\Controllers\Api\{{model}};
+
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\{{model}}\Store{{model}}Request;
+use App\Http\Requests\{{model}}\Update{{model}}Request;
+use App\Http\Resources\{{model}}Resource;
+use App\Models\{{model}};
+use App\Services\{{model}}Service;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class {{model}}Controller extends ApiController implements HasMiddleware
+{
+    public function __construct(
+        private {{model}}Service $service,
+    ) {}
+
+    /**
+     * Define the middleware that should be applied to the controller.
+     * This ensures that only authenticated users can access certain methods.
+     *
+     * @return array
+     */
+    public static function middleware(): array
+    {
+        return [
+            // new Middleware('auth:sanctum'),
+        ];
+    }
+
+    /**
+     * Retrieve a list of all {{table}}.
+     * This method fetches the {{table}} using the {{model}}Service 
+     * and returns them as a collection of {{model}}Resource.
+     *
+     * @return \App\Http\Resources\{{model}}Resource
+     */
+    public function index()
+    {
+        // Ensure the authenticated user has permission to view any {{modelVariable}}.
+        $this->isAbleTo('viewAny', {{model}}::class);
+
+        ${{table}} = $this->service->list();
+
+        return {{model}}Resource::collection(${{table}});
+    }
+
+    /**
+     * Create a new {{modelVariable}}.
+     * This method validates the request data and uses the {{model}}Service to create a new {{modelVariable}}.
+     * It returns the created {{modelVariable}} as a {{model}}Resource.
+     *
+     * @param \App\Http\Requests\{{model}}\Store{{model}}Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Store{{model}}Request $request)
+    {
+        // Ensure the authenticated user has permission to create the {{modelVariable}}.
+        $this->isAbleTo('create', {{model}}::class);
+
+        ${{modelVariable}} = $this->service->create{{model}}($request->validated());
+
+        return $this->apiCreated(
+            __('{{model}}') . __(' created successfully'),
+            new {{model}}Resource(${{modelVariable}})
+        );
+    }
+
+    /**
+     * Retrieve a specific {{modelVariable}}.
+     * This method fetches the specified {{modelVariable}} using the {{model}}Service and returns it as a {{model}}Resource.
+     *
+     * @param int|string ${{modelVariable}} The ID or slug of the {{modelVariable}} to retrieve.
+     * @return \App\Http\Resources\{{model}}Resource
+     */
+    public function show(${{modelVariable}})
+    {
+        // Ensure the authenticated user has permission to view the {{modelVariable}}.
+        $this->isAbleTo('view', {{model}}::class);
+
+        ${{modelVariable}} = $this->service->get(${{modelVariable}});
+
+        return new {{model}}Resource(${{modelVariable}});
+    }
+
+    /**
+     * Update an existing {{modelVariable}}.
+     * This method validates the request data and uses the {{model}}Service to update the specified {{modelVariable}}.
+     * It returns the updated {{modelVariable}} as a {{model}}Resource.
+     *
+     * @param \App\Http\Requests\{{model}}\Update{{model}}Request $request
+     * @param \App\Models\{{model}} ${{modelVariable}}
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Update{{model}}Request $request, {{model}} ${{modelVariable}})
+    {
+        // Ensure the authenticated user has permission to update the {{modelVariable}}.
+        $this->isAbleTo('update', ${{modelVariable}});
+
+        ${{modelVariable}} = $this->service->update(${{modelVariable}}, $request->validated());
+
+        return $this->apiOk(
+            __('{{model}}') . __(' updated successfully'),
+            new {{model}}Resource(${{modelVariable}})
+        );
+    }
+
+    /**
+     * Delete a {{modelVariable}}.
+     * This method ensures the authenticated user has permission to delete the {{modelVariable}} and then
+     * uses the {{model}}Service to delete the specified {{modelVariable}}. It returns a no-content response upon successful deletion.
+     *
+     * @param \App\Models\{{model}} ${{modelVariable}}
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy({{model}} ${{modelVariable}})
+    {
+        // Ensure the authenticated user has permission to delete the {{modelVariable}}.
+        $this->isAbleTo('delete', ${{modelVariable}});
+
+        $this->service->delete(${{modelVariable}});
+
+        return $this->apiNoContent();
+    }
+}

@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class BadRequestException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('Bad Request.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_BAD_REQUEST, $status);
+    }
+}

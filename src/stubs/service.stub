@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\{{model}};
+use App\Repositories\{{model}}Repository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
+use App\Traits\ApiErrorResponses;
+
+class {{model}}Service
+{
+    use ApiErrorResponses;
+
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {}
+
+    /**
+     * Retrieve a list of {{table}} with optional filters, sorting, and transformations.
+     *
+     * @return Collection The collection of {{table}}.
+     */
+    public function list(): Collection
+    {
+        return $this->repository->listWithFilters();
+    }
+
+    /**
+     * Retrieve a specific {{modelVariable}} by its ID with optional filters and transformations.
+     *
+     * @param  int  $id  The ID of the {{modelVariable}} to retrieve.
+     * @return {{model}} The requested {{modelVariable}}.
+     */
+    public function get($id): {{model}}
+    {
+        return $this->repository->getWithFilters($id);
+    }
+
+    /**
+     * Create a new {{modelVariable}}.
+     *
+     * @param  array  $data  The data for creating the {{modelVariable}}.
+     * @return {{model}} The newly created {{modelVariable}} instance.
+     */
+    public function create(array $data): {{model}}
+    {
+        try {
+            return {{model}}::create($data);
+
+        } catch (\Exception $e) {
+            return $this->catchServerError('creating', '{{modelVariable}}');
+        }
+    }
+
+    /**
+     * Update an existing {{modelVariable}}.
+     *
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to update.
+     * @param  array  $data  The updated data for the {{modelVariable}}.
+     * @return {{model}} The updated {{modelVariable}} instance.
+     */
+    public function update({{model}} ${{modelVariable}}, array $data): {{model}}
+    {
+        try {
+            return ${{modelVariable}}->update($data);
+
+        } catch (\Exception $e) {
+            return $this->catchServerError('updating', '{{modelVariable}}');
+        }
+    }
+
+    /**
+     * Delete a {{modelVariable}}.
+     *
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to delete.
+     * @return bool True if the deletion was successful, false otherwise.
+     */
+    public function delete({{model}} ${{modelVariable}}): bool
+    {
+        try {
+            return ${{modelVariable}}->delete();
+
+        } catch (\Exception $e) {
+            return $this->catchServerError($e, 'deleting', '{{modelVariable}}');
+        }
+    }
+}

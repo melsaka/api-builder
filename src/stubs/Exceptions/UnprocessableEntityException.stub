@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Exceptions;
+
+class UnprocessableEntityException extends BaseHttpException
+{
+    public function __construct($message = null, $errors = [], $status = 'fail')
+    {
+        $message = $message ?: __('Unprocessable Entity.');
+
+        $data = [
+            'message' => $message,
+            'errors' => $errors,
+        ];
+
+        parent::__construct($data, \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY, $status);
+    }
+}

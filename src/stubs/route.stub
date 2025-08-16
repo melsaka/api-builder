@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Routes;
+
+use App\Http\Controllers\Api\{{model}}\{{model}}Controller;
+use Illuminate\Support\Facades\Route;
+
+class {{model}}
+{
+    public static function routes()
+    {
+        self::crudRoutes();
+    }
+
+    public static function crudRoutes()
+    {
+        Route::apiResource('/{{table}}', {{model}}Controller::class);
+    }
+}

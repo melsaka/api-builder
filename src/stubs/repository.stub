@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Repositories;
+
+use Illuminate\Database\Eloquent\Collection;
+use Spatie\QueryBuilder\AllowedInclude;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+use App\Models\{{model}};
+
+class {{model}}Repository
+{
+    /**
+     * Retrieve all {{table}} with applied filters and build the tree structure if required.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function listWithFilters(): Collection
+    {
+        return $this->basicQuery({{model}}::class)->get();
+    }
+
+    /**
+     * Retrieve a {{modelVariable}} with applied filters and build the tree structure if required.
+     *
+     * @param int|string $id
+     * @return \App\Models\{{model}}
+     */
+    public function getWithFilters($id): {{model}}
+    {
+        return $this->basicQuery({{model}}::class)->where('id', $id)->firstOrFail();
+    }
+
+    /**
+     * Build the basic query with allowed fields, filters, sorts, and includes.
+     *
+     * @param string $query
+     * @return \Spatie\QueryBuilder\QueryBuilder
+     */
+    public function basicQuery($query)
+    {
+        return QueryBuilder::for($query)
+            ->allowedFields($this->getAllowedFields())
+            ->allowedFilters($this->getAllowedFilters())
+            ->defaultSort('-id')
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedIncludes($this->getAllowedIncludes());
+    }
+
+    /**
+     * Get the allowed fields for the query.
+     *
+     * @return array
+     */
+    public function getAllowedFields()
+    {
+        return [
+            'id',
+            {{fields}},
+            'created_at',
+            'updated_at',
+        ];
+    }
+
+    /**
+     * Get the allowed filters for the query.
+     *
+     * @return array
+     */
+    public function getAllowedFilters()
+    {
+        return [
+            'id',
+            {{fields}}
+        ];
+    }
+
+    /**
+     * Get the allowed sorts for the query.
+     *
+     * @return array
+     */
+    public function getAllowedSorts()
+    {
+        return [
+            'id',
+            {{fields}},
+        ];
+    }
+
+    /**
+     * Get the allowed includes for the query.
+     *
+     * @return array
+     */
+    public function getAllowedIncludes()
+    {
+        return [];
+    }
+}

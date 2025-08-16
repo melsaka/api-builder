@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class ThrottleRequestsException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('Too Many Attempts.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_TOO_MANY_REQUESTS, $status);
+    }
+}

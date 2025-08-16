@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class AuthorizationException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('You do not have permission to perform this action.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_FORBIDDEN, $status);
+    }
+}

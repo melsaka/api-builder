@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class NotFoundException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('Resource Not Found.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_NOT_FOUND, $status);
+    }
+}

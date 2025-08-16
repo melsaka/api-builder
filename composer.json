@@ -1,0 +1,50 @@
+{
+    "name": "melsaka/api-builder",
+    "description": "Scaffold CRUD API (Controller, Service, Repository, Resource, Requests, Policies, etc.) for Laravel applications",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel", 
+        "api", 
+        "crud", 
+        "scaffold", 
+        "generator", 
+        "artisan",
+        "controller",
+        "service",
+        "repository"
+    ],
+    "authors": [
+        {
+            "name": "Mohamed ElSaka",
+            "email": "melsakax@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/melsaka/api-builder",
+    "support": {
+        "issues": "https://github.com/melsaka/api-builder/issues",
+        "source": "https://github.com/melsaka/api-builder"
+    },
+  	"require": {
+	  	"php": "^8.2",
+	  	"illuminate/support": "^11.0|^12.0"
+  	},
+	"autoload": {
+		"psr-4": {
+			"Melsaka\\ApiBuilder\\": "src/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Melsaka\\ApiBuilder\\Providers\\ApiBuilderServiceProvider"
+			]
+		}
+	},
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class TooManyRequestsException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'fail')
+    {
+        $message = $message ?: __('Too Many Requests.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_TOO_MANY_REQUESTS, $status);
+    }
+}

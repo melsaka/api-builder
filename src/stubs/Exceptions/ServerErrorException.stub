@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Exceptions;
+
+class ServerErrorException extends BaseHttpException
+{
+    public function __construct($message = null, $status = 'error')
+    {
+        $message = $message ?: __('Internal Server Error.');
+
+        parent::__construct($message, \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR, $status);
+    }
+}

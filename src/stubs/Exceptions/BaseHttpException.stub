@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Exceptions;
+
+use Exception;
+
+class BaseHttpException extends Exception
+{
+    protected $status;
+
+    protected $message;
+
+    protected $statusCode;
+
+    protected $errorsList;
+
+    public function __construct($message = null, $statusCode = 500, $status = 'error')
+    {
+        $message = $message ?: __('An error occurred.');
+
+        $this->errorsList = is_array($message) ? $message['errors'] : [];
+
+        $this->statusCode = $statusCode;
+
+        $this->message = $this->errorsList ? $message['message'] : $message;
+
+        $this->status = $status;
+    }
+
+    public function render($request)
+    {
+        $response = [
+            'status' => $this->status,
+            'message' => $this->message,
+        ];
+
+        $response = $this->errorsList ? array_merge($response, ['errors' => $this->errorsList]) : $response;
+
+        return response()->json($response, $this->statusCode);
+    }
+}

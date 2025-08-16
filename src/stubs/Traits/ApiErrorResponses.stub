@@ -1,0 +1,138 @@
+<?php
+
+namespace App\Traits;
+
+use Illuminate\Support\Facades\Log;
+
+trait ApiErrorResponses
+{
+    /**
+     * Handle unauthenticated requests by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\AuthenticationException
+     */
+    protected function apiUnauthenticated($message)
+    {
+        throw new \App\Exceptions\AuthenticationException($message);
+    }
+
+    /**
+     * Handle unauthorized requests by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\AuthorizationException
+     */
+    protected function apiUnauthorized($message)
+    {
+        throw new \App\Exceptions\AuthorizationException($message);
+    }
+
+    /**
+     * Handle failed payments by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\PaymentGatewayException
+     */
+    protected function apiPaymentFailed($message)
+    {
+        throw new \App\Exceptions\PaymentGatewayException($message);
+    }
+
+    /**
+     * Handle resource not found requests by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\NotFoundException
+     */
+    protected function apiNotFound($message)
+    {
+        throw new \App\Exceptions\NotFoundException($message);
+    }
+
+    /**
+     * Handle bad request responses by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\BadRequestException
+     */
+    protected function apiBadRequest($message)
+    {
+        throw new \App\Exceptions\BadRequestException($message);
+    }
+
+    /**
+     * Handle unprocessable entity responses by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     * @param  array  $errors  The validation errors.
+     *
+     * @throws \App\Exceptions\UnprocessableEntityException
+     */
+    protected function apiUnprocessableEntity($message, $errors)
+    {
+        throw new \App\Exceptions\UnprocessableEntityException($message, $errors);
+    }
+
+    /**
+     * Handle too many requests responses by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\TooManyRequestsException
+     */
+    protected function apiTooManyRequests($message)
+    {
+        throw new \App\Exceptions\TooManyRequestsException($message);
+    }
+
+    /**
+     * Handle conflict responses by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\ConflictException
+     */
+    protected function apiConflict($message)
+    {
+        throw new \App\Exceptions\ConflictException($message);
+    }
+
+    /**
+     * Handle server error responses by throwing a custom exception.
+     *
+     * @param  string  $message  The error message.
+     *
+     * @throws \App\Exceptions\ServerErrorException
+     */
+    protected function apiServerError($message)
+    {
+        throw new \App\Exceptions\ServerErrorException($message);
+    }
+
+    /**
+     * Handle server error responses by throwing a custom exception
+     * And logging these errors before we do that.
+     *
+     * @param  \Exception  $exception  The error eception to log
+     * @param  string  $type  The error type ex: creating, updating, etc...
+     * @param  string  $model  The model name ex: category, etc...
+     *
+     * @throws \App\Exceptions\ServerErrorException
+     */
+    protected function catchServerError($exception, string $type, string $model)
+    {
+        $baseMessage = __('Error') .' '. __($type) .' '. __($model);
+
+        // Log any error that occurs
+        Log::error($baseMessage . ': '.PHP_EOL.$exception->getMessage().PHP_EOL.$exception);
+
+        // throw server error if an error occurs
+        return $this->apiServerError($baseMessage . ', '. __('please try again later..'));
+    }
+}
