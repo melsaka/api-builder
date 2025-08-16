@@ -65,12 +65,6 @@ This will create:
 
 The package works out of the box with sensible defaults. All generated files follow Laravel conventions and best practices.
 
-## Testing
-
-```bash
-composer test
-```
-
 ## Credits
 
 - [Mohamed ElSaka](https://github.com/melsaka)
