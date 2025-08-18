@@ -60,7 +60,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
         // Ensure the authenticated user has permission to create the {{modelVariable}}.
         // $this->isAbleTo('create', {{model}}::class);
 
-        ${{modelVariable}} = $this->service->create{{model}}($request->validated());
+        ${{modelVariable}} = $this->service->create($request->validated());
 
         return $this->apiCreated(
             __('{{model}}') . __(' created successfully'),
