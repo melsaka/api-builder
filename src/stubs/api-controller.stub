@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Traits\ApiErrorResponses;
 use App\Traits\ApiOkResponses;
 
 class ApiController extends Controller
 {
-    use ApiOkResponses;
+    use ApiOkResponses, ApiErrorResponses;
 }

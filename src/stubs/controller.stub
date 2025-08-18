@@ -40,7 +40,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
     public function index()
     {
         // Ensure the authenticated user has permission to view any {{modelVariable}}.
-        $this->isAbleTo('viewAny', {{model}}::class);
+        // $this->isAbleTo('viewAny', {{model}}::class);
 
         ${{table}} = $this->service->list();
 
@@ -58,7 +58,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
     public function store(Store{{model}}Request $request)
     {
         // Ensure the authenticated user has permission to create the {{modelVariable}}.
-        $this->isAbleTo('create', {{model}}::class);
+        // $this->isAbleTo('create', {{model}}::class);
 
         ${{modelVariable}} = $this->service->create{{model}}($request->validated());
 
@@ -78,7 +78,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
     public function show(${{modelVariable}})
     {
         // Ensure the authenticated user has permission to view the {{modelVariable}}.
-        $this->isAbleTo('view', {{model}}::class);
+        // $this->isAbleTo('view', {{model}}::class);
 
         ${{modelVariable}} = $this->service->get(${{modelVariable}});
 
@@ -97,7 +97,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
     public function update(Update{{model}}Request $request, {{model}} ${{modelVariable}})
     {
         // Ensure the authenticated user has permission to update the {{modelVariable}}.
-        $this->isAbleTo('update', ${{modelVariable}});
+        // $this->isAbleTo('update', ${{modelVariable}});
 
         ${{modelVariable}} = $this->service->update(${{modelVariable}}, $request->validated());
 
@@ -118,7 +118,7 @@ class {{model}}Controller extends ApiController implements HasMiddleware
     public function destroy({{model}} ${{modelVariable}})
     {
         // Ensure the authenticated user has permission to delete the {{modelVariable}}.
-        $this->isAbleTo('delete', ${{modelVariable}});
+        // $this->isAbleTo('delete', ${{modelVariable}});
 
         $this->service->delete(${{modelVariable}});
 
