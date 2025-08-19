@@ -54,7 +54,7 @@ class ApiCrud extends Command
 
         $resourceFields = $fields;
 
-        $supportedImages = $modelClass::supportedImages();
+        $supportedImages = method_exists($modelClass, 'supportedImages') ? $modelClass::supportedImages() : [];
 
         $includes = count($supportedImages) ? "'images'" : '';
 
