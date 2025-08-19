@@ -38,14 +38,14 @@ class StubGenerator
         ];
     }
 
-    public function getCrudFiles(string $model): array
+    public function getCrudFiles(string $model, int $supportedImages): array
     {
         return [
-            "app/Routes/{$model}.php"                                   => 'route.stub',
-            "app/Http/Controllers/Api/{$model}/{$model}Controller.php"  => 'controller.stub',
-            "app/Services/{$model}Service.php"                          => 'service.stub',
+            "app/Routes/{$model}.php"                                   => $supportedImages ? 'with-images/route.stub' : 'route.stub',
+            "app/Http/Controllers/Api/{$model}/{$model}Controller.php"  => $supportedImages ? 'with-images/controller.stub' : 'controller.stub',
+            "app/Http/Resources/{$model}Resource.php"                   => $supportedImages ? 'with-images/resource.stub' : 'resource.stub',
+            "app/Services/{$model}Service.php"                          => $supportedImages ? 'with-images/service.stub' : 'service.stub',
             "app/Repositories/{$model}Repository.php"                   => 'repository.stub',
-            "app/Http/Resources/{$model}Resource.php"                   => 'resource.stub',
             "app/Http/Requests/{$model}/Store{$model}Request.php"       => 'Requests/StoreRequest.stub',
             "app/Http/Requests/{$model}/Update{$model}Request.php"      => 'Requests/UpdateRequest.stub',
             "app/Policies/{$model}Policy.php"                           => 'policy.stub',
@@ -85,10 +85,29 @@ class StubGenerator
             ->implode(",\n            ");
     }
 
-    public function formatFields(array $fields, bool $asResource = false): string
+    public function formatFields(array $fields): string
     {
         return collect($fields)
-            ->map(fn($field) => $asResource ? "'{$field}' => \$this->{$field}" : "'{$field}'")
+            ->map(fn($field) => "'{$field}'")
+            ->implode(",\n            ");
+    }
+
+    public function formatResource(array $fields, array $supportedImages): string
+    {
+        foreach ($supportedImages as $key => $value) {
+            $fields[] = $key;
+        }
+
+        return collect($fields)
+            ->map(function ($field) use ($supportedImages) {
+                if (isset($supportedImages[$field])) {
+                    return $supportedImages[$field] === 'singular' ? 
+                        "'{$field}' => \$this->getImageUrls('{$field}', true)":
+                        "'{$field}' => \$this->getAllImageUrls('{$field}', true)";
+                }
+
+                return "'{$field}' => \$this->{$field}";
+            })
             ->implode(",\n            ");
     }
 }

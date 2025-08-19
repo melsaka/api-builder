@@ -95,6 +95,6 @@ class {{model}}Repository
      */
     public function getAllowedIncludes()
     {
-        return [];
+        return [{{includes}}];
     }
 }

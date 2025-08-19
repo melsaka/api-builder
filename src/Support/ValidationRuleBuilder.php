@@ -59,16 +59,19 @@ class ValidationRuleBuilder
             default                => null,
         };
     }
-
+    
     private function isNullable(string $connection, string $table, string $column): bool
     {
-        if (!class_exists(\Doctrine\DBAL\DriverManager::class)) {
-            return false; // fallback
+        $schema = DB::connection($connection)->getSchemaBuilder();
+
+        $columns = $schema->getColumns($table); // Available in Laravel 11+
+
+        foreach ($columns as $col) {
+            if ($col['name'] === $column) {
+                return $col['nullable'] ?? false;
+            }
         }
 
-        $schemaManager = DB::connection($connection)->getDoctrineSchemaManager();
-        $doctrineColumn = $schemaManager->listTableDetails($table)->getColumn($column);
-
-        return !$doctrineColumn->getNotnull();
+        return false;
     }
 }

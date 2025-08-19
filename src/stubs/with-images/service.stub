@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\{{model}}Repository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Traits\ApiErrorResponses;
+use Illuminate\Http\Request;
+use App\Models\{{model}};
+
+class {{model}}Service
+{
+    use ApiErrorResponses;
+
+    public function __construct(
+        private {{model}}Repository $repository
+    ) {}
+
+    /**
+     * Retrieve a list of {{table}} with optional filters, sorting, and transformations.
+     *
+     * @return Collection The collection of {{table}}.
+     */
+    public function list(): Collection
+    {
+        return $this->repository->listWithFilters();
+    }
+
+    /**
+     * Retrieve a specific {{modelVariable}} by its ID with optional filters and transformations.
+     *
+     * @param  int  $id  The ID of the {{modelVariable}} to retrieve.
+     * @return {{model}} The requested {{modelVariable}}.
+     */
+    public function get($id): {{model}}
+    {
+        return $this->repository->getWithFilters($id);
+    }
+
+    /**
+     * Create a new {{modelVariable}}.
+     *
+     * @param  array  $data  The data for creating the {{modelVariable}}.
+     * @return {{model}} The newly created {{modelVariable}} instance.
+     */
+    public function create(array $data): {{model}}
+    {
+        try {
+            return {{model}}::create($data);
+
+        } catch (\Exception $e) {
+            return $this->catchServerError($e, 'creating', '{{modelVariable}}');
+        }
+    }
+
+    /**
+     * Update an existing {{modelVariable}}.
+     *
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to update.
+     * @param  array  $data  The updated data for the {{modelVariable}}.
+     * @return {{model}} The updated {{modelVariable}} instance.
+     */
+    public function update({{model}} ${{modelVariable}}, array $data): {{model}}
+    {
+        try {
+            return ${{modelVariable}}->update($data);
+
+        } catch (\Exception $e) {
+            return $this->catchServerError($e, 'updating', '{{modelVariable}}');
+        }
+    }
+
+    /**
+     * Delete a {{modelVariable}}.
+     *
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to delete.
+     * @return bool True if the deletion was successful, false otherwise.
+     */
+    public function delete({{model}} ${{modelVariable}}): bool
+    {
+        try {
+            return ${{modelVariable}}->delete();
+
+        } catch (\Exception $e) {
+            return $this->catchServerError($e, 'deleting', '{{modelVariable}}');
+        }
+    }
+
+    /**
+     * Upload {{modelVariable}} images.
+     *
+     * @param  Request  $request  The request data for uploading {{modelVariable}} image.
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to update.
+     * @return {{model}} with the updated {{modelVariable}} images.
+     */
+    public function uploadImage(Request $request, {{model}} ${{modelVariable}}): {{model}}
+    {
+        try {
+            $method = 'storeOrUpdateImage';
+            $fileName = 'image';
+
+            if ($request->has('images')) {
+                $method = 'storeImages';
+                $fileName = 'images';
+            }
+
+            ${{modelVariable}}->$method(
+                $request->file($fileName),
+                $request->input('type')
+            );
+
+            return ${{modelVariable}}->load('images');
+        } catch (\Exception $e) {
+            return $this->catchServerError($e, 'uploading', '{{modelVariable}} images');
+        }
+    }
+
+    /**
+     * Delete a {{modelVariable}} image.
+     *
+     * @param  Request  $request  The request data for deleting {{modelVariable}} image.
+     * @param  {{model}}  ${{modelVariable}}  The {{modelVariable}} to delete.
+     * @return bool True if the deletion was successful, false otherwise.
+     */
+    public function deleteImage(Request $request, {{model}} ${{modelVariable}}): bool
+    {
+        return ${{modelVariable}}->deleteImagesByName([$request->input('type')], $request->input('names'));
+    }
+}

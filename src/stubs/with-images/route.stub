@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Routes;
+
+use App\Http\Controllers\Api\{{model}}\{{model}}Controller;
+use Illuminate\Support\Facades\Route;
+
+class {{model}}
+{
+    public static function routes()
+    {
+        self::crudRoutes();
+        self::imagesRoutes();
+    }
+
+    public static function crudRoutes()
+    {
+        Route::apiResource('/{{table}}', {{model}}Controller::class);
+    }
+
+    public static function imagesRoutes()
+    {
+        Route::post('/{{table}}/{{{modelVariable}}}/images', [{{model}}Controller::class, 'uploadImage']);
+        Route::delete('/{{table}}/{{{modelVariable}}}/images', [{{model}}Controller::class, 'deleteImage']);
+    }
+}

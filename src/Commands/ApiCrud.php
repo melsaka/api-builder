@@ -52,16 +52,26 @@ class ApiCrud extends Command
         $fields       = $this->inspector->getColumns($modelClass);
         $rules        = $this->ruleBuilder->build($modelClass);
 
+        $resourceFields = $fields;
+
+        $supportedImages = $modelClass::supportedImages();
+
+        $includes = count($supportedImages) ? "'images'" : '';
+
+        $supportedImagesString = implode(',', array_keys($supportedImages));
+
         // Generate CRUD-specific files
-        foreach ($this->stubGenerator->getCrudFiles($model) as $file => $stub) {
+        foreach ($this->stubGenerator->getCrudFiles($model, count($supportedImages)) as $file => $stub) {
             $this->stubGenerator->generateIfMissing($file, $stub, [
                 '{{model}}'           => $model,
                 '{{modelVariable}}'   => $modelVar,
                 '{{modelPlural}}'     => $modelPlural,
                 '{{table}}'           => $table,
-                '{{validationRules}}' => $this->stubGenerator->formatRules($rules),
+                '{{includes}}'        => $includes,
                 '{{fields}}'          => $this->stubGenerator->formatFields($fields),
-                '{{resource}}'        => $this->stubGenerator->formatFields($fields, true),
+                '{{validationRules}}' => $this->stubGenerator->formatRules($rules),
+                '{{resource}}'        => $this->stubGenerator->formatResource($fields, $supportedImages),
+                '{{supportedImagesString}}' => $supportedImagesString,
             ]);
         }
 

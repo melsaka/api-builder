@@ -46,4 +46,20 @@ class {{model}}Policy
     {
         return true;
     }
+
+    /**
+     * Determine whether the user can upload image to the model.
+     */
+    public function uploadImage(User $user, {{model}} ${{modelVariable}}): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can delete image to the model.
+     */
+    public function deleteImage(User $user, {{model}} ${{modelVariable}}): bool
+    {
+        return true;
+    }
 }

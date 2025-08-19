@@ -10,6 +10,9 @@ Scaffold CRUD API (Controller, Service, Repository, Resource, Requests, Policies
 - Create Policies for authorization
 - Includes API error handling traits
 - Custom exceptions for API responses
+- Supports uploading images to your models
+
+This package is using my [laravel image manager](https://github.com/melsaka/laravel-image-manager) package to support adding images easily to your models.
 
 ## Requirements
 
@@ -60,6 +63,99 @@ This will create:
 - Requests: `app/Http/Requests/User/StoreUserRequest.php` & `UpdateUserRequest.php`
 - Policy: `app/Policies/UserPolicy.php`
 - Routes: `app/Routes/User.php`
+
+### Uploading Images To Your Models
+
+Checkout [laravel image manager](https://github.com/melsaka/laravel-image-manager) package to learn what you need to do first.
+
+Publish the configuration file:
+
+```bash
+php artisan vendor:publish --provider="Melsaka\ImageManager\ImageManagerServiceProvider" --tag="image-manager"
+```
+
+Then you create the images table: 
+
+```bash
+php artisan migrate
+```
+
+Add your model name and it's settings under the models attribute in the config file:
+
+```php
+return [
+    'storage_disk' => 'public', // could be r2, aws, etc..
+    'base_path' => 'uploads',
+    'format' => 'webp',
+    'quality' => 90,
+    
+    'models' => [
+        'user' => [
+            'types' => [
+                'avatar' => [
+                    'sizes' => [
+                        'thumbnail' => [
+                            'width' => 100,
+                            'height' => 100,
+                            'mode' => 'cover',
+                        ],
+                        'medium' => [
+                            'width' => 300,
+                            'height' => 300,
+                            'mode' => 'cover',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+```
+
+Add the Trait to your Model
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Melsaka\ImageManager\Traits\HasImages;
+
+class User extends Model
+{
+    use HasImages;
+    
+    // Your model code...
+}
+```
+
+Now all you need to do is to define the supported images function: 
+
+```php
+<?php
+class User extends Model
+{
+    use HasImages;
+	    
+	public static function supportedImages()
+	{
+	    return [
+	        'profile'   => 'singular', // for singular image upload
+	        'gallery'   => 'multiple', // for multiple images upload
+	    ];
+	}
+    // Your model code...
+}
+```
+
+That's it now you can do:
+
+```bash
+php artisan api:crud User
+```
+
+For more info read about: [laravel image manager docs](https://github.com/melsaka/laravel-image-manager)
 
 ## Configuration
 
