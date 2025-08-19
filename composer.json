@@ -30,7 +30,7 @@
 	  	"php": "^8.2",
 	  	"illuminate/support": "^11.0|^12.0",
         "spatie/laravel-query-builder": "^6.3",
-        "melsaka/laravel-image-manager": "dev-main"
+        "melsaka/laravel-image-manager": "^1.0.0"
   	},
 	"autoload": {
 		"psr-4": {
