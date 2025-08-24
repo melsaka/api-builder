@@ -31,12 +31,13 @@ The package will automatically register its service provider.
 
 ## Usage
 
-### Publish Stubs (Optional)
+### Publish Stubs
 
 If you want to customize the generated files, publish the stub files:
 
 ```bash
 php artisan vendor:publish --tag=api-builder-stubs
+php artisan vendor:publish --tag=image-manager
 ```
 
 ### Generate Required Files
