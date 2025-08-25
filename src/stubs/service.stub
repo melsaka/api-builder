@@ -63,8 +63,9 @@ class {{model}}Service
     public function update({{model}} ${{modelVariable}}, array $data): {{model}}
     {
         try {
-            return ${{modelVariable}}->update($data);
+            ${{modelVariable}}->update($data);
 
+            return ${{modelVariable}};
         } catch (\Exception $e) {
             return $this->catchServerError($e, 'updating', '{{modelVariable}}');
         }
